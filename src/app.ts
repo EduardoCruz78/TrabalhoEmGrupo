@@ -1,4 +1,3 @@
-// Importar middleware JSON
 import express from 'express';
 import bodyParser from 'body-parser';
 import sqlite3 from 'sqlite3';
@@ -84,12 +83,12 @@ app.post('/register', async (req: Request, res: Response) => {
         res.status(201).send('Usuário cadastrado com sucesso!');
     } catch (error) {
         console.error(error);
-        res.status(500).send('Erro ao registrar usuário');
+        res.status(500).send('Email já registrado, tente outro email');
     }
 });
 
-// Rota para editar um usuário
-app.get('/edit/:id', requireLogin, async (req: Request, res: Response) => {
+// Rota para página de atualização de usuário
+app.get('/atualizar/:id', requireLogin, async (req: Request, res: Response) => {
     const userId = req.params.id;
 
     if (req.session.userId !== Number(userId)) {
@@ -101,7 +100,7 @@ app.get('/edit/:id', requireLogin, async (req: Request, res: Response) => {
         const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
 
         if (user) {
-            res.sendFile(path.join(__dirname, 'views', 'edit.html')); // Página de edição do usuário
+            res.sendFile(path.join(__dirname, 'views', 'atualizar.html')); // Página de atualização do usuário
         } else {
             res.status(404).send('Usuário não encontrado');
         }
@@ -112,17 +111,16 @@ app.get('/edit/:id', requireLogin, async (req: Request, res: Response) => {
 });
 
 // Rota para atualizar um usuário
-app.post('/edit/:id', requireLogin, async (req: Request, res: Response) => {
-    const userId = req.params.id;
-    const { name, email, password } = req.body;
+app.post('/update', requireLogin, async (req: Request, res: Response) => {
+    const { id, name, email, password } = req.body;
 
-    if (req.session.userId !== Number(userId)) {
+    if (req.session.userId !== Number(id)) {
         return res.status(403).send('Acesso negado');
     }
 
     try {
         const db = await dbPromise;
-        await db.run('UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, password, userId]);
+        await db.run('UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, password, id]);
         res.redirect('/users.html'); // Redireciona de volta para a lista de usuários
     } catch (error) {
         console.error(error);
@@ -145,6 +143,18 @@ app.post('/delete/:id', requireLogin, async (req: Request, res: Response) => {
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao tentar excluir o usuário');
+    }
+});
+
+// Rota para excluir todos os usuários
+app.post('/delete-all', requireLogin, async (req: Request, res: Response) => {
+    try {
+        const db = await dbPromise;
+        await db.run('DELETE FROM users');
+        req.session.destroy(() => res.redirect('/login')); // Destruir sessão e redirecionar
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao tentar excluir todos os usuários');
     }
 });
 
