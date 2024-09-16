@@ -64,49 +64,7 @@ app.post('/login', async (req: Request, res: Response) => {
             req.session.userId = user.id; // Armazena o ID do usuário na sessão
             req.session.userName = user.name; // Armazena o nome do usuário na sessão
 
-            const users = await db.all('SELECT name, email, id FROM users');
-            res.send(`<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Usuários Cadastrados</title>
-                <style>
-                    /* Adicione o estilo aqui */
-                </style>
-            </head>
-            <body>
-                <h1>Usuários Cadastrados</h1>
-                <div class="center">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${users.map(user => `
-                                <tr>
-                                    <td>${user.name}</td>
-                                    <td>${user.email}</td>
-                                    <td>
-                                        <form action="/edit/${user.id}" method="GET" style="display:inline;">
-                                            <button type="submit">Alterar</button>
-                                        </form>
-                                        <form action="/delete/${user.id}" method="POST" style="display:inline;">
-                                            <button type="submit">Excluir</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                    <a href="/login" class="back-btn">Voltar para Login</a>
-                </div>
-            </body>
-            </html>`);
+            res.redirect('/users.html'); // Redireciona para a página de usuários
         } else {
             res.status(401).send('Nome ou senha incorretos!');
         }
@@ -143,30 +101,7 @@ app.get('/edit/:id', requireLogin, async (req: Request, res: Response) => {
         const user = await db.get('SELECT * FROM users WHERE id = ?', [userId]);
 
         if (user) {
-            res.send(`<!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Alterar Dados</title>
-            </head>
-            <body>
-                <h1>Alterar Dados</h1>
-                <form action="/edit/${userId}" method="POST">
-                    <label for="name">Nome:</label>
-                    <input type="text" id="name" name="name" value="${user.name}" required>
-                    <br>
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" value="${user.email}" required>
-                    <br>
-                    <label for="password">Senha:</label>
-                    <input type="password" id="password" name="password" required>
-                    <br>
-                    <button type="submit">Salvar</button>
-                </form>
-                <a href="/login">Voltar para Login</a>
-            </body>
-            </html>`);
+            res.sendFile(path.join(__dirname, 'views', 'edit.html')); // Página de edição do usuário
         } else {
             res.status(404).send('Usuário não encontrado');
         }
@@ -188,7 +123,7 @@ app.post('/edit/:id', requireLogin, async (req: Request, res: Response) => {
     try {
         const db = await dbPromise;
         await db.run('UPDATE users SET name = ?, email = ?, password = ? WHERE id = ?', [name, email, password, userId]);
-        res.redirect('/login');
+        res.redirect('/users.html'); // Redireciona de volta para a lista de usuários
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao tentar atualizar os dados');
@@ -206,10 +141,22 @@ app.post('/delete/:id', requireLogin, async (req: Request, res: Response) => {
     try {
         const db = await dbPromise;
         await db.run('DELETE FROM users WHERE id = ?', [userId]);
-        req.session.destroy(() => res.redirect('/login'));
+        req.session.destroy(() => res.redirect('/login')); // Destruir sessão e redirecionar
     } catch (error) {
         console.error(error);
         res.status(500).send('Erro ao tentar excluir o usuário');
+    }
+});
+
+// Rota para API de usuários
+app.get('/api/users', requireLogin, async (req: Request, res: Response) => {
+    try {
+        const db = await dbPromise;
+        const users = await db.all('SELECT name, email, id FROM users');
+        res.json(users); // Envia a lista de usuários como JSON
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro ao buscar usuários');
     }
 });
 
