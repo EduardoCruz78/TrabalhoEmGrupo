@@ -5,58 +5,92 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <style>
+        /* Estilo do corpo */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            margin: 0;
         }
+
+        /* Estilo do contêiner principal */
         .container {
             background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            width: 300px;
-            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
+
+        /* Estilo do título */
         h1 {
+            text-align: center;
             margin-bottom: 20px;
             color: #333;
         }
+
+        /* Estilo do formulário */
+        form {
+            width: 100%;
+        }
+
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-top: 15px;
             color: #555;
+            font-weight: bold;
         }
-        input[type="text"], input[type="password"] {
-            width: calc(100% - 20px);
+
+        input {
+            margin-top: 5px;
             padding: 10px;
-            margin-bottom: 15px;
+            width: 100%;
             border: 1px solid #ddd;
-            border-radius: 4px;
+            border-radius: 5px;
             box-sizing: border-box;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border 0.3s;
         }
+
+        input:focus {
+            border-color: #007bff;
+            background-color: #fff;
+        }
+
+        /* Estilo dos botões */
         button {
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
             background-color: #007bff;
-            color: #fff;
+            color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
-            margin: 5px;
+            transition: background-color 0.3s;
         }
+
         button:hover {
             background-color: #0056b3;
         }
+
+        /* Estilo do botão de voltar */
         .back-button {
-            background-color: #6c757d;
+            background-color: #28a745;
         }
+
         .back-button:hover {
-            background-color: #5a6268;
+            background-color: #218838;
         }
     </style>
 </head>

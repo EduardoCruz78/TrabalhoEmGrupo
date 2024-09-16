@@ -1,117 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro</title>
     <style>
-        /* Estilo do formulário */
+        /* Estilo do corpo */
         body {
             font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
         }
 
+        /* Estilo do contêiner principal */
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Estilo do título */
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilo do formulário */
         form {
-            margin: 20px;
+            width: 100%;
+            margin-bottom: 20px;
         }
 
         label {
             display: block;
-            margin-top: 10px;
+            margin-top: 15px;
+            color: #555;
+            font-weight: bold;
         }
 
         input {
-            margin-bottom: 10px;
-            padding: 8px;
+            margin-top: 5px;
+            padding: 10px;
             width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 5px;
             box-sizing: border-box;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            transition: border 0.3s;
         }
 
+        input:focus {
+            border-color: #007bff;
+            background-color: #fff;
+        }
+
+        /* Estilo dos botões */
         button {
-            margin-top: 10px;
-            padding: 10px 20px;
+            margin-top: 20px;
+            padding: 12px;
+            width: 100%;
             background-color: #007bff;
             color: white;
             border: none;
+            border-radius: 5px;
             cursor: pointer;
-            text-align: center;
+            font-size: 16px;
+            transition: background-color 0.3s;
         }
 
         button:hover {
             background-color: #0056b3;
         }
 
-        /* Estilo do botão para "Já possui uma conta" */
+        /* Estilo do botão de login */
         .login-btn {
-            margin-top: 20px;
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
+            margin-top: 10px;
+            background-color: #28a745;
+            padding: 12px;
+            width: 100%;
+            border-radius: 5px;
             text-align: center;
-            display: inline-block;
         }
 
         .login-btn:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
 
-        /* Estilo do modal (popup) */
+        /* Estilo do modal */
         .modal {
-            display: none; /* Oculto por padrão */
+            display: none;
             position: fixed;
             z-index: 1;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.5); /* Fundo transparente escuro */
-            overflow: auto; /* Adiciona rolagem se necessário */
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #fff;
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
             width: 80%;
             max-width: 400px;
-            text-align: center;
-            border-radius: 8px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         .close {
             color: #aaa;
             float: right;
-            font-size: 28px;
-            font-weight: bold;
+            font-size: 24px;
         }
 
         .close:hover,
         .close:focus {
-            color: black;
-            text-decoration: none;
+            color: #000;
             cursor: pointer;
         }
     </style>
 </head>
-<body>
-    <h1>Cadastro</h1>
-    <form id="register-form">
-        <label for="name">Nome:</label>
-        <input type="text" id="name" name="name" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
-        <label for="password">Senha:</label>
-        <input type="password" id="password" name="password" required>
-        <br>
-        <button type="submit">Cadastrar</button>
-    </form>
 
-    <!-- Botão para login -->
-    <button class="login-btn" onclick="window.location.href='login.html'">Já possui uma conta?</button>
+<body>
+    <div class="container">
+        <h1>Cadastro</h1>
+        <form id="register-form">
+            <label for="name">Nome:</label>
+            <input type="text" id="name" name="name" required>
+            <br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <br>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" required>
+            <br>
+            <button type="submit">Cadastrar</button>
+        </form>
+
+        <!-- Botão para login -->
+        <button class="login-btn" onclick="window.location.href='login.html'">Já possui uma conta?</button>
+    </div>
 
     <!-- Modal (popup) -->
     <div id="popupModal" class="modal">
@@ -122,7 +167,7 @@
     </div>
 
     <script>
-        document.getElementById('register-form').addEventListener('submit', async function(event) {
+        document.getElementById('register-form').addEventListener('submit', async function (event) {
             event.preventDefault();
 
             const formData = new FormData(this);
@@ -155,12 +200,12 @@
                 modal.style.display = "block";
 
                 // Fechar o popup ao clicar no "X"
-                closeModal.onclick = function() {
+                closeModal.onclick = function () {
                     modal.style.display = "none";
                 };
 
                 // Fechar o popup ao clicar fora dele
-                window.onclick = function(event) {
+                window.onclick = function (event) {
                     if (event.target === modal) {
                         modal.style.display = "none";
                     }
@@ -172,4 +217,5 @@
         });
     </script>
 </body>
+
 </html>
