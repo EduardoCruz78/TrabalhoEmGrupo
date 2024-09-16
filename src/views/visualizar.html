@@ -17,12 +17,18 @@
             color: #333;
         }
 
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
         table {
             width: 100%;
-            max-width: 800px;
-            margin: 20px auto;
             border-collapse: collapse;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
@@ -59,22 +65,38 @@
             background-color: #0056b3;
         }
 
-        .center {
-            text-align: center;
-        }
-
         .actions form {
             display: inline;
         }
 
         .actions button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
             margin-right: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .actions button:hover {
+            background-color: #218838;
+        }
+
+        .actions button.delete-btn {
+            background-color: #dc3545;
+        }
+
+        .actions button.delete-btn:hover {
+            background-color: #c82333;
         }
     </style>
 </head>
 <body>
-    <h1>Usuários Cadastrados</h1>
-    <div class="center">
+    <div class="container">
+        <h1>Usuários Cadastrados</h1>
         <table id="user-table">
             <thead>
                 <tr>
@@ -88,12 +110,10 @@
             </tbody>
         </table>
 
-        <!-- Botão de voltar -->
         <a href="/login" class="back-btn">Voltar para Login</a>
     </div>
 
     <script>
-        // Simulação dos dados recebidos (você pode substituir isso com uma requisição fetch real)
         const users = [
             {"name": "aaa", "email": "aaa@a", "id": 1},
             {"name": "qqq", "email": "qqq@q", "id": 2},
@@ -101,7 +121,6 @@
             {"name": "111", "email": "111@1", "id": 4}
         ];
 
-        // Função para exibir os usuários
         function displayUsers(users) {
             const userTable = document.getElementById('user-table').getElementsByTagName('tbody')[0];
 
@@ -128,7 +147,7 @@
                 const deleteForm = document.createElement('form');
                 deleteForm.action = `/delete/${user.id}`;
                 deleteForm.method = 'POST';
-                deleteForm.innerHTML = '<button type="submit">Excluir</button>';
+                deleteForm.innerHTML = '<button type="submit" class="delete-btn">Excluir</button>';
                 actionsCell.appendChild(deleteForm);
 
                 row.appendChild(actionsCell);
@@ -136,7 +155,6 @@
             });
         }
 
-        // Chamar a função para exibir os usuários
         displayUsers(users);
     </script>
 </body>
