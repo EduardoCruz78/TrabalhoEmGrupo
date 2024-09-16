@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuários Logados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #f0f0f0;
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Usuários Logados</h1>
+    <ul id="user-list"></ul>
+    
+    <button onclick="window.location.href='index.html'">Voltar para Cadastro</button>
+
+    <script>
+        fetch('/users')
+            .then(response => response.json())
+            .then(users => {
+                const userList = document.getElementById('user-list');
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<strong>Nome:</strong> ${user.name} <br> <strong>Email:</strong> ${user.email}`;
+                    userList.appendChild(li);
+                });
+            });
+    </script>
+</body>
+</html>
